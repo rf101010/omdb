@@ -2,6 +2,7 @@
   $nav_selected = "SCANNER";
   $left_buttons = "YES";
   $left_selected = "NOTFOUND";
+  $left_selected = "NOTFOUND";
 
   include("./nav.php");
   
