@@ -35,7 +35,7 @@
               <br/>Home</li>
             </a>
 
-            <a href="Movies.php">
+            <a href="list_movies.php">
               <li <?php if($nav_selected == "Movies"){ echo 'class="current-page"'; } ?>>
                 <img src="./images/Movies.png">
                 <br/>Movies</li>
