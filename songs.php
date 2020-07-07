@@ -1,3 +1,4 @@
+
 <?php
 
   $nav_selected = "MOVIES"; 
@@ -13,42 +14,42 @@
 <div class="right-content">
     <div class="container">
 
-      <h3 style = "color: #01B0F1;">Movies -> Movies List</h3>
+      <h3 style = "color: #01B0F1;">Songs -> Songs List</h3>
 
-        <h3><img src="images/movies.png" style="max-height: 35px;" />Movies List</h3>
+    <button><a class="btn btn-sm" href="create_movie.php">Create a Song</a></button>
+       
+<br>
 
         <table id="info" cellpadding="0" cellspacing="0" border="0"
             class="datatable table table-striped table-bordered datatable-style table-hover"
             width="100%" style="width: 100px;">
               <thead>
                 <tr id="table-first-row">
-                        <th>year</th>
-                        <th>Movie Count</th>
+                        <th>Song Id</th>
+                        <th>Title</th>
+                        <th>lyrics</th>
                       
                 </tr>
               </thead>
-
-            
 
               <tbody>
 
               <?php
 
-//$sql = "SELECT * from movies ORDER BY year_made ASC;";
-// BUild a SQL query "SELECT year_made, COUNT(native_name) AS movie_count from movies ORDER by year_made DSC"
-
-$sql = "SELECT year_made, COUNT(native_name) AS movie_count FROM movies GROUP BY year_made ORDER BY year_made DESC;";
-
-
+$sql = "SELECT * from movies INNER JOIN movie_song INNER JOIN songs ON movies.movie_id = movie_song.movie_id AND songs.song_id = movie_song.song_id  ORDER BY songs.song_id ASC;";
 $result = $db->query($sql);
 
                 if ($result->num_rows > 0) {
                     // output data of each row
                     while($row = $result->fetch_assoc()) {
                         echo '<tr>
-                                <td>'.$row["year_made"].'</td>
-                                <td>'.$row["movie_count"].' </span> </td>
-                              
+                                <td>'.$row["song_id"].'</td>
+                                <td>'.$row["title"].' </span> </td>
+                                <td>'.$row["lyrics"].'</span> </td>
+                                
+                                <td><a class="btn btn-info btn-sm" href="movie_info.php?movie_id='.$row["movie_id"].'">Display</a>
+                                    <a class="btn btn-warning btn-sm" href="modify_movie.php?movie_id='.$row["movie_id"].'">Modify</a>
+                                    <a class="btn btn-danger btn-sm" href="delete_movie.php?movie_id='.$row["movie_id"].'">Delete</a></td>          
                             </tr>';
                     }//end while
                 }//end if

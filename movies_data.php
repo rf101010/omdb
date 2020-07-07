@@ -1,8 +1,8 @@
 <?php
 
-  $nav_selected = "SCANNER"; 
+  $nav_selected = "MOVIES"; 
   $left_buttons = "YES"; 
-  $left_selected = "RELEASES"; 
+  $left_selected = "DATA"; 
 
   include("./nav.php");
   global $db;
@@ -13,46 +13,54 @@
 <div class="right-content">
     <div class="container">
 
-      <h3 style = "color: #01B0F1;">Scanner -> System Releases</h3>
+      <h3 style = "color: #01B0F1;">Movies -> Movies List with extended data</h3>
 
-        <h3><img src="images/releases.png" style="max-height: 35px;" />System Releases</h3>
+        <h3><img src="images/movies.png" style="max-height: 35px;" />Movies List with extended data</h3>
 
         <table id="info" cellpadding="0" cellspacing="0" border="0"
             class="datatable table table-striped table-bordered datatable-style table-hover"
             width="100%" style="width: 100px;">
               <thead>
                 <tr id="table-first-row">
-                        <th>local_name</th>
-                        <th>english_name</th>
-                        <th>year_made</th>
-                       
+                        <th>Movie Id</th>
+                        <th>Local Name</th>
+                        <th>English Name</th>
+                        <th>Year </th>
+
+                        <!-- TODO: Instead of these four columns, we now have to show the following columns in Iteration 6
+                        id, 
+                        native_name, 
+                        english_name, 
+                        year, 
+                        language, 
+                        country, 
+                        genre, 
+                        plot (show the first 30 characters) -->
+
                 </tr>
               </thead>
-
-              <tfoot>
-                <tr>
-                        <th>local_name</th>
-                        <th>english_name</th>
-                        <th>year_made</th>
-                      
-                </tr>
-              </tfoot>
 
               <tbody>
 
               <?php
 
 $sql = "SELECT * from movies ORDER BY year_made ASC;";
+
+// TODO: The above SQL statement becomes a  JOIN between movies and movie_data
+// If there is no corresponding movie_data, then show those as blanks
+//NOTE: Whenever you see ., that means + in PHP
+
 $result = $db->query($sql);
 
                 if ($result->num_rows > 0) {
                     // output data of each row
+                    // Add four more rows of data which you are getting from the database
                     while($row = $result->fetch_assoc()) {
                         echo '<tr>
-                                <td>'.$row["local_name"].'</td>
-                                <td>'.$row["english_name"].' </span> </td>
+                                <td>'.$row["movie_id"].'</td>
+                                <td>'.$row["native_name"].' </span> </td>
+                                <td>'.$row["english_name"].'</td>
                                 <td>'.$row["year_made"].'</td>
-                             
                             </tr>';
                     }//end while
                 }//end if

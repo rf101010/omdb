@@ -1,306 +1,527 @@
 <?php
-session_start();
+$nav_selected = "MOVIES";
+$left_buttons = "YES";
+$left_selected = "NO";
 
+include("./nav.php");
 require 'bin/functions.php';
 require 'db_configuration.php';
+global $db;
+?>
 
-$query = "SELECT * FROM movies";
+<!-- =====================================================================================================
 
-$GLOBALS['data'] = mysqli_query($db, $query);
+This page displays the information from all 12 tables.
+The input is "movie_id". 
+This "movie_id" is passed to movie_info.php as a URL parameter.
 
+This pages displays the movie information in three sections.
+
+[A] MOVIE 
+[B] PEOPLE
+[C] SONGS
+
+The above three sections are outlined below
+
+[A]  MOVIE Details
+
+[A.1] Basic Data  (table: movies)
+Display Type: Name - value pairs
+
+id
+native_name 
+english_name 
+year_made 
+
+[A.2] Extended Data (table: movie_data)
+Display Type: Name - value pairs
+
+language
+country
+genre
+plot
+
+[A.3] Movie Media (table: movie_media)
+Display Type: Show this as a table
+
+m_media_id
+m_link  (preferable to display the media on the page)
+m_link_type
+
+[A.4] Movie Key Words (table: movie_keywords)
+Display Type: Name - value pairs
+
+keywords (show it as a comma separated list) 
+
+
+[B] PEOPLE Details
+
+[B.1] People  (table: movie_people and people)  
+Display Type: Show this as a table
+
+role 
+screen_name
+first_name
+middle_name
+last_name 
+image_name (prefereable to display the image on the page)
+
+[C] SONGS Details
+
+[C.1] Songs (table: movie_song, songs, song_media, song_people, song_keywords)
+Display Type: Show this as a table
+
+title 
+lyrics
+screen name (from people)
+role (from song_people)
+keywords (from song_keywords, show this info as comma separated list
+media (from songs_media - show the IDs as comma separated list, media_link will be a hyper link)
+
+===================================================================================================== -->
+
+<!-- ========== Getting the movie id =====================================
+// This is the movie_id coming to this page as GET parameter
+// We will fetch it and save it as $movie_id to be used in our queries
+======================================================================== -->
+<?php
+if (isset($_GET['movie_id'])) {
+  $movie_id = mysqli_real_escape_string($db, $_GET['movie_id']);
+}
 ?>
 
 
-<?php $page_title = 'Online Movie Database > movies'; ?>
+<!-- ================ [A.1] Basic Data (table: movies) ======================
+Display Type: Name - value pairs
 
-<?php include('header.php'); 
-    $page="dresses_list.php";
-   // verifyLogin($page);
-?>
+movie_id
+native_name 
+english_name 
+year_made
+========================================================================= -->
 
-<style>
-    #title {
-        text-align: center;
-        color: darkgoldenrod;
-    }
-    #toggle {
-        color: 	#4397fb;
-    }
-    #toggle:hover {
-        color: #467bc7
-    }
-    thead input {
-        width: 100%;
-    }
-    .thumbnailSize{
-        height: 100px;
-        width: 100px;
-        transition:transform 0.25s ease;
-    }
-    .thumbnailSize:hover {
-        -webkit-transform:scale(3.5);
-        transform:scale(3.5);
-    }
-    
-</style>
+<div class="right-content">
+  <div class="container">
+    <h3 style="color: #01B0F1;">[A.1] Movies -> Basic Data</h3>
 
-<!-- Page Content -->
-<br><br>
-<div class="container-fluid">
     <?php
-        if(isset($_GET['createMovie'])){
-            if($_GET["createMovie"] == "Success"){
-                echo '<br><h3>Success! Your Movie has been added!</h3>';
-            }
-        }
 
-        if(isset($_GET['MovieUpdated'])){
-            if($_GET["MovieUpdated"] == "Success"){
-                echo '<br><h3>Success! Your Movie has been modified!</h3>';
-            }
-        }
 
-        if(isset($_GET['MovieDeleted'])){
-            if($_GET["MovieDeleted"] == "Success"){
-                echo '<br><h3>Success! Your Movie has been deleted!</h3>';
-            }
-        }
+    // query string for the Query A.1
+    $sql_A1 = "SELECT movie_id, native_name, english_name, year_made FROM movies WHERE movie_id =" . $movie_id;
 
-        if(isset($_GET['createTopic'])){
-            if($_GET["createTopic"] == "Success"){
-                echo '<br><h3>Success! Your topic has been added!</h3>';
-            }
-        }
+    if (!$sql_A1_result = $db->query($sql_A1)) {
+      die('There was an error running query[' . $connection->error . ']');
+    }
+
+    if ($sql_A1_result->num_rows > 0) {
+      $a1_tuple = $sql_A1_result->fetch_assoc();
+      echo '<br> Movie ID : ' . $a1_tuple["movie_id"] .
+        '<br> Native Name : ' . $a1_tuple["native_name"] .
+        '<br> English Name : ' . $a1_tuple["english_name"] .
+        '<br> Year Made :  ' . $a1_tuple["year_made"];
+    } //end if
+    else {
+      echo "0 results";
+    } //end else
+
+    $sql_A1_result->close();
     ?>
-   
-    <h2 id="title">Movie List</h2><br>
-    
-    <div id="customerTableView">
-        <button><a class="btn btn-sm" href="create_movie.php">Create a Movie</a></button>
-        <table class="display" id="ceremoniesTable" style="width:100%">
-            <div class="table responsive">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Did you know?</th>
-                    <th>Category</th>
-                    <th>Type</th>
-                    <th>State Name </th>
-                    <th>Key Words</th>
-                    <th>Status</th>
-                    <th>Notes</th>
-                    <th>Image</th>
-                    <th>Display</th>
-                    <th>Modify</th>
-                    <th>Delete</th>
-                </tr>
-                </thead>
-                <tbody>
-                <div>
-                    <strong> Toggle column: </strong> 
-                    <a id="toggle" class="toggle-vis" data-column="0">Id</a> - 
-                    <a id="toggle" class="toggle-vis" data-column="1">Name</a> - 
-                    <a id="toggle" class="toggle-vis" data-column="2">Description</a> - 
-                    <a id="toggle" class="toggle-vis" data-column="3">Did You Know</a> - 
-                    <a id="toggle" class="toggle-vis" data-column="4">Category</a> - 
-                    <a id="toggle" class="toggle-vis" data-column="5">Type</a> - 
-                    <a id="toggle" class="toggle-vis" data-column="6">State Name</a> -
-                    <a id="toggle" class="toggle-vis" data-column="7">Key Words</a> - 
-                    <a id="toggle" class="toggle-vis" data-column="8">Status</a> -
-                    <a id="toggle" class="toggle-vis" data-column="9">Notes</a> - 
-                    <a id="toggle" class="toggle-vis" data-column="10">Image</a> - 
-                    <a id="toggle" class="toggle-vis" data-column="11">Display</a> -
-                    <a id="toggle" class="toggle-vis" data-column="12">Modify</a> - 
-                    <a id="toggle" class="toggle-vis" data-column="13">Delete</a> 
-                </div> <br>
-                
-                <?php
-                // fetch the data from $_GLOBALS
-                if ($data->num_rows > 0) {
-                    // output data of each row
-                    while($row = $data->fetch_assoc()) {
-                    $ID = $row["id"];
-                    $name = $row["name"];
-                    $description = $row["description"];
-                    $did_you_know = $row["did_you_know"];
-                    $category = $row["category"];
-                    $type = $row["type"];
-                    $state_name = $row["state_name"];
-                    $key_words = $row["key_words"];
-                    $status = $row["status"];
-                    $notes = $row["notes"];
-                    $image = $row["image_url"];
-
-                    if(isset($_SESSION['role'])) {
-                        ?>
-                <tr>
-                    <td><?php echo $ID; ?></td>
-                    <td><div contenteditable="true" onBlur="updateValue(this,'name','<?php echo $ID; ?>')"><?php echo $name; ?></div></span> </td>
-                    <td><div contenteditable="true" onBlur="updateValue(this,'description','<?php echo $ID; ?>')"><?php echo $description; ?></div></span> </td>
-                    <td><div contenteditable="true" onBlur="updateValue(this,'did_you_know','<?php echo $ID; ?>')"><?php echo $did_you_know; ?></div></span> </td>
-                    <td><div contenteditable="true" onBlur="updateValue(this,'category','<?php echo $ID; ?>')"><?php echo $category; ?></div></span> </td>
-                    <td><div contenteditable="true" onBlur="updateValue(this,'type','<?php echo $ID; ?>')"><?php echo $type; ?></div></span> </td>
-                    <td><div contenteditable="true" onBlur="updateValue(this,'state_name','<?php echo $ID; ?>')"><?php echo $state_name; ?></div></span> </td>
-                    <td><div contenteditable="true" onBlur="updateValue(this,'key_words','<?php echo $ID; ?>')"><?php echo $key_words; ?></div></span> </td>
-                    <td><div contenteditable="true" onBlur="updateValue(this,'status','<?php echo $ID; ?>')"><?php echo $status; ?></div></span> </td>
-                    <td><div contenteditable="true" onBlur="updateValue(this,'notes','<?php echo $ID; ?>')"><?php echo $notes; ?></div></span> </td>
-                    <?php echo '<td><img src="images/dress_images/'.$row["image_url"].'" style="width:100px;height:120px;">' ?>
-                    <?php echo '<td><a class="btn btn-info btn-sm" href="display_the_dress.php?id='.$row["id"].'">Display</a></td>' ?>
-                    <?php echo '<td><a class="btn btn-warning btn-sm" href="modify_dress.php?id='.$row["id"].'">Modify</a></td>' ?>
-                    <?php echo '<td><a class="btn btn-danger btn-sm" href="deleteDress.php?id='.$row["id"].'">Delete</a></td>' ?>
-                </tr>
-                 <?php  
-                    } else{
-                      echo '<tr>
-                      <td>'.$row["id"].'</td>
-                      <td> </span> <a href="display_the_dress.php?id='.$row["id"].'">'.$row["name"].'</a></td>
-                      <td>'.$row["description"].'</td>
-                      <td>'.$row["did_you_know"].'</td>
-                      <td>'.$row["category"].' </span> </td>
-                      <td>'.$row["type"].'</td>
-                      <td>'.$row["state_name"].'</td>
-                      <td>'.$row["key_words"].' </span> </td>
-                      <td>'.$row["status"].' </span> </td>
-                      <td>'.$row["notes"].' </span> </td>
-                      <td><img class="thumbnailSize" src="' . "images/dress_images/" .$row["image_url"]. '" alt="'.$row["image_url"].'"></td>
-                      <td><a class="btn btn-info btn-sm" href="display_the_dress.php?id='.$row["id"].'">Display</a></td>
-                      <td><a class="btn btn-warning btn-sm" href="modify_dress.php?id='.$row["id"].'">Modify</a></td>
-                      <td><a class="btn btn-danger btn-sm" href="deleteDress.php?id='.$row["id"].'">Delete</a></td>
-                  </tr>';    
-
-                    }//end while
-                }//end if
-            }//end second if 
-  
-                ?>
-
-                </tbody>
-            </div>
-        </table>
-    </div>
+  </div>
 </div>
 
-<!-- /.container -->
-<!-- Footer -->
-<footer class="page-footer text-center">
-    <p>Created for ICS 325 Summer Project "Team Alligators"</p>
-</footer>
-
-<!--JQuery-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
-
-<script type="text/javascript" charset="utf8"
-        src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-
-<!--Data Table-->
-<script type="text/javascript" charset="utf8"
-        src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
-<script type="text/javascript" charset="utf8"
-        src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
-<script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
-<script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-<script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
-<script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
-<script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
-<script type="text/javascript" charset="utf8"
-        src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
-<script type="text/javascript" charset="utf8"
-        src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-<script type="text/javascript" charset="utf8"
-        src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-
-<script type="text/javascript" language="javascript">
-    $(document).ready( function () {
-        
-        $('#ceremoniesTable').DataTable( {
-            dom: 'lfrtBip',
-            buttons: [
-                'copy', 'excel', 'csv', 'pdf'
-            ] }
-        );
-
-        $('#ceremoniesTable thead tr').clone(true).appendTo( '#ceremoniesTable thead' );
-        $('#ceremoniesTable thead tr:eq(1) th').each( function (i) {
-            var title = $(this).text();
-            $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
-    
-            $( 'input', this ).on( 'keyup change', function () {
-                if ( table.column(i).search() !== this.value ) {
-                    table
-                        .column(i)
-                        .search( this.value )
-                        .draw();
-                }
-            } );
-        } );
-    
-        var table = $('#ceremoniesTable').DataTable( {
-            orderCellsTop: true,
-            fixedHeader: true,
-            retrieve: true
-        } );
-        
-    } );
-
-    $(document).ready(function() {
-        
-    var table = $('#ceremoniesTable').DataTable( {
-        retrieve: true,
-        "scrollY": "200px",
-        "paging": false
-    } );
- 
-    $('a.toggle-vis').on( 'click', function (e) {
-        e.preventDefault();
- 
-        // Get the column API object
-        var column = table.column( $(this).attr('data-column') );
- 
-        // Toggle the visibility
-        column.visible( ! column.visible() );
-    } );
-} );
 
 
-function updateValue(element,column,id){
-        var value = element.innerText
-        $.ajax({
-            url:'editable_list.php',
-            type: 'post',
-            data:{
-                value: value,
-                column: column,
-                id: id
-            },
-            success:function(php_result){
-				console.log(php_result);
-				
-            }
-            
-        })
+<!-- ================ [A.2] Extended Data (table: movie_data) ======================
+Display Type: Name - value pairs
+
+language
+country
+genre
+plot
+
+TODO: Copy the code snippet from A.1, change the code to reflect Extended data
+========================================================================= -->
+<div class="right-content">
+  <div class="container">
+    <h3 style="color: #01B0F1;">[A.2] Movies -> Extended Data</h3>
+
+    <?php
+
+    $sql_A2 = "SELECT language, country, genre, plot FROM `movie_data` WHERE movie_data.movie_id =" . $movie_id;
+
+   if (!$sql_A2_result = $db->query($sql_A2)) { 
+     die('There was an error running query[' . $connection->error . ']');
     }
 
+  if ($sql_A2_result->num_rows > 0) {
+    $a2_tuple = $sql_A2_result->fetch_assoc();
+      echo '<br> Language : ' . $a2_tuple["language"] .
+      '<br> Country : ' . $a2_tuple["country"] .
+      '<br> Genre : ' . $a2_tuple["genre"] .
+      '<br> Plot :  ' . $a2_tuple["plot"];
+  } //end if
+  else {
+    echo "0 results";
+  } //end else
+
+  $sql_A2_result->close(); 
+    ?>
+
+  </div>
+</div>
+
+
+<!-- ================ [A.3] Movie Media (table: movie_media) ======================
+Display Type: Show this as a table
+
+m_media_id
+m_link  (preferable to display the media on the page)
+m_link_type
+========================================================================= -->
+
+<div class="right-content">
+  <div class="container">
+    <h3 style="color: #01B0F1;">[A.3] Movie -> Media</h3>
+
+
+    <table class="display" id="movie_media_table" style="width:100%">
+      <div class="table responsive">
+
+        <thead>
+          <tr>
+            <th> Movie ID </th>
+            <th> Media Id</th>
+            <th> Media Link</th>
+            <th> Link Type</th>
+          </tr>
+        </thead>
+
+        <?php
+
+        // query string for the Query A.1
+        $sql_A3 = "SELECT movie_id, movie_media_id, m_link, m_link_type FROM movie_media WHERE movie_id =" . $movie_id;
+
+        if (!$sql_A3_result = $db->query($sql_A3)) {
+          die('There was an error running query[' . $connection->error . ']');
+        }
+
+        // this is 1 to many relationship
+        // So, many tuples may be returned
+        // We will display those in a table in a while loop
+        if ($sql_A3_result->num_rows > 0) {
+          // output data of each row
+          while ($a3_tuple = $sql_A3_result->fetch_assoc()) {
+            echo '<tr>
+                      <td>' . $a3_tuple["movie_id"] . '</td>
+                      <td>' . $a3_tuple["movie_media_id"] . '</td>
+                      <td>' . $a3_tuple["m_link"] . '</td>
+                      <td>' . $a3_tuple["m_link_type"] . ' </span> </td>
+                  </tr>';
+          } //end while
+
+        } //end second if 
+
+        $sql_A3_result->close();
+        ?>
+
+    </table>
+  </div>
+</div>
 
 
 
+<!-- ================ [A.4] Movie Key Words (table: movie_keywords) ======================
+Display Type: Name - value pairs
+
+keywords (show it as a comma separated list) 
+
+ADD THIS SOMEHOW:
+$keyword = "";
+$keyword = $keyword  .$row["keyword"] . ",";
+
+========================================================================= -->
+
+<div class="right-content">
+  <div class="container">
+    <h3 style="color: #01B0F1;">[A.4] Movie -> Key Words</h3>
+
+    <table class="display" id="keywords_table" style="width:100%">
+      <div class="table responsive">
+
+        <thead>
+          <tr>
+            <th> Keywords </th>
+            
+          </tr>
+        </thead>
+
+        <?php
+
+        // query string for the Query A.1
+        $sql_A4 = "SELECT GROUP_CONCAT(keyword) AS keyword FROM movie_keywords WHERE movie_id=" . $movie_id;
+
+        if (!$sql_A4_result = $db->query($sql_A4)) {
+          die('There was an error running query[' . $connection->error . ']');
+        }
+
+        // this is 1 to many relationship
+        // So, many tuples may be returned
+        // We will display those in a table in a while loop
+        if ($sql_A4_result->num_rows > 0) {
+          // output data of each row
+          while ($a4_tuple = $sql_A4_result->fetch_assoc()) {
+            echo '<tr>
+                      <td>' . $a4_tuple["keyword"] . ' </span> </td>
+                  </tr>';
+          } //end while
+
+        } //end second if 
+
+        $sql_A4_result->close();
+        ?>
+
+    </table>
+  </div>
+</div>
+
+
+<!-- ================ [A.5] Movie Trivia (table: movie_trivia) ======================
+Display Type: Name - value pairs
+
+========================================================================= -->
+
+<div class="right-content">
+  <div class="container">
+    <h3 style="color: #01B0F1;">[A.5] Movie -> Trivia</h3>
+
+    <table class="display" id="trivia_table" style="width:100%">
+      <div class="table responsive">
+
+        <thead>
+          <tr>
+            <th> Trivia </th>
+            
+          </tr>
+        </thead>
+
+        <?php
+
+        // query string for the Query A.1
+        $sql_A5 = "SELECT trivia FROM `movie_trivia` WHERE movie_id=" . $movie_id;
+
+        if (!$sql_A5_result = $db->query($sql_A5)) {
+          die('There was an error running query[' . $connection->error . ']');
+        }
+
+        // this is 1 to many relationship
+        // So, many tuples may be returned
+        // We will display those in a table in a while loop
+        if ($sql_A5_result->num_rows > 0) {
+          // output data of each row
+          while ($a5_tuple = $sql_A5_result->fetch_assoc()) {
+            echo '<tr>
+                      <td>' . $a5_tuple["trivia"] . ' </span> </td>
+                  </tr>';
+          } //end while
+
+        } //end second if 
+
+        $sql_A5_result->close();
+        ?>
+
+    </table>
+  </div>
+</div>
+
+
+
+<!-- ================ [B.1] People  (table: movie_people and people)   ======================
+Display Type: Show this as a table
+
+role 
+screen_name
+first_name
+middle_name
+last_name 
+image_name  
+========================================================================= -->
+
+<div class="right-content">
+  <div class="container">
+    <h3 style="color: #01B0F1;">[B.1] Movie -> People</h3>
+
+    <table class="display" id="movie_people_table" style="width:100%">
+      <div class="table responsive">
+
+        <thead>
+          <tr>
+            <th> Role </th>
+            <th> Screen Name</th>
+            <th> First Name</th>
+            <th> Middle Name</th>
+            <th> Last Name</th>
+            <th> Image name</th>
+
+          </tr>
+        </thead>
+
+        <?php
+
+        // query string for the Query A.1
+        $sql_B1 = "SELECT role, screen_name, gender, image_name, first_name, middle_name, last_name 
+                   FROM movie_people INNER JOIN people ON movie_people.people_id = people.people_id 
+                   WHERE movie_people.movie_id=" . $movie_id;
+
+        if (!$sql_B1_result = $db->query($sql_B1)) {
+          die('There was an error running query[' . $connection->error . ']');
+        }
+
+        // this is 1 to many relationship
+        // So, many tuples may be returned
+        // We will display those in a table in a while loop
+        if ($sql_B1_result->num_rows > 0) {
+          // output data of each row
+          while ($b1_tuple = $sql_B1_result->fetch_assoc()) {
+            echo '<tr>
+                      <td>' . $b1_tuple["role"] . '</td>
+                      <td>' . $b1_tuple["screen_name"] . '</td>
+                      <td>' . $b1_tuple["first_name"] . '</td>
+                      <td>' . $b1_tuple["middle_name"] . '</td>
+                      <td>' . $b1_tuple["last_name"] . '</td>
+                      <td>' . $b1_tuple["image_name"] . ' </span> </td>
+                  </tr>';
+          } //end while
+
+        } //end second if 
+
+        $sql_B1_result->close();
+        ?>
+
+    </table>
+  </div>
+</div>
+
+
+
+<!-- ================ [C.1] Songs (table: movie_song, songs, song_media, song_people, song_keywords)   ======================
+Display Type: Show this as a table
+
+title 
+lyrics
+screen name (from people)
+role (from song_people)
+keywords (from song_keywords, show this info as comma separated list
+media (from songs_media - show the IDs as comma separated list, media_link will be a hyper link)
+========================================================================= -->
+
+<div class="right-content">
+  <div class="container">
+    <h3 style="color: #01B0F1;">[C.1] Movie -> Songs</h3>
+
+    <table class="display" id="songs_table" style="width:100%">
+      <div class="table responsive">
+
+        <thead>
+          <tr>
+            <th> Title </th>
+            <th> Lyrics </th>
+            <th> Screen Name </th>
+            <th> Role </th>
+            <th> Keywords </th>
+            <th> Media ID </th>
+            <th> Media Link </th>
+            <th> Link Type </th>
+
+          </tr>
+        </thead>
+
+        <?php
+
+        // query string for the Query C.1
+        $sql_C1 = "SELECT title, lyrics, role, screen_name, image_name, s_link, s_link_type, song_media_id, keyword 
+                   FROM songs INNER JOIN movie_song ON movie_song.song_id = songs.song_id 
+                   INNER JOIN song_people ON song_people.song_id = songs.song_id 
+                   INNER JOIN people ON song_people.people_id = people.people_id 
+                   INNER JOIN song_media ON song_media.song_id = songs.song_id 
+                   INNER JOIN (SELECT GROUP_CONCAT(keyword) AS keyword, song_id
+                              FROM song_keywords GROUP by song_id) song_keywords ON movie_song.song_id = song_keywords.song_id 
+                   WHERE movie_song.movie_id=" . $movie_id;
+
+        if (!$sql_C1_result = $db->query($sql_C1)) {
+          die('There was an error running query[' . $connection->error . ']');
+        }
+
+        // this is 1 to many relationship
+        // So, many tuples may be returned
+        // We will display those in a table in a while loop
+        if ($sql_C1_result->num_rows > 0) {
+          // output data of each row
+          while ($c1_tuple = $sql_C1_result->fetch_assoc()) {
+            echo '<tr>
+                      <td>' . $c1_tuple["title"] . '</td>
+                      <td>' . $c1_tuple["lyrics"] . '</td>
+                      <td>' . $c1_tuple["screen_name"] . '</td>
+                      <td>' . $c1_tuple["role"] . '</td>
+                      <td>' . $c1_tuple["keyword"] . '</td>
+                      <td>' . $c1_tuple["song_media_id"] . '</td>
+                      <td>' . $c1_tuple["s_link"] . '<td>
+                      <td>' . $c1_tuple["s_link_type"] . ' </span> </td>
+                  </tr>';
+          } //end while
+
+        } //end second if 
+
+        $sql_C1_result->close();
+        ?>
+
+    </table>
+  </div>
+</div>
+
+
+<!-- ================== JQuery Data Table script ================================= -->
+
+<script type="text/javascript" language="javascript">
+  $(document).ready(function() {
+
+    $('#info').DataTable({
+      dom: 'lfrtBip',
+      buttons: [
+        'copy', 'excel', 'csv', 'pdf'
+      ]
+    });
+
+    $('#info thead tr').clone(true).appendTo('#info thead');
+    $('#info thead tr:eq(1) th').each(function(i) {
+      var title = $(this).text();
+      $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+
+      $('input', this).on('keyup change', function() {
+        if (table.column(i).search() !== this.value) {
+          table
+            .column(i)
+            .search(this.value)
+            .draw();
+        }
+      });
+    });
+
+    var table = $('#info').DataTable({
+      orderCellsTop: true,
+      fixedHeader: true,
+      retrieve: true
+    });
+
+  });
 </script>
 
-</body>
-</html>
+
+
+<style>
+  tfoot {
+    display: table-header-group;
+  }
+</style>
+
+<?php include("./footer.php"); ?>

@@ -1,8 +1,8 @@
 <?php
 
-  $nav_selected = "MOVIES"; 
+  $nav_selected = "PEOPLE"; 
   $left_buttons = "YES"; 
-  $left_selected = "MOVIES"; 
+  $left_selected = "PEOPLE"; 
 
   include("./nav.php");
   global $db;
@@ -13,42 +13,40 @@
 <div class="right-content">
     <div class="container">
 
-      <h3 style = "color: #01B0F1;">Movies -> Movies List</h3>
+      <h3 style = "color: #01B0F1;">People -> People List</h3>
 
-        <h3><img src="images/movies.png" style="max-height: 35px;" />Movies List</h3>
+        <h3><img src="images/people.png" style="max-height: 35px;" />People List</h3>
 
         <table id="info" cellpadding="0" cellspacing="0" border="0"
             class="datatable table table-striped table-bordered datatable-style table-hover"
             width="100%" style="width: 100px;">
               <thead>
                 <tr id="table-first-row">
-                        <th>year</th>
-                        <th>Movie Count</th>
-                      
+                        <th>People Id</th>
+                        <th>Screen Name </th>
+                        <th>First Name</th>
+                        <th>Middle Name</th>
+                        <th>Last Name</th>
+                        <th>Image </th>
                 </tr>
               </thead>
-
-            
-
               <tbody>
 
               <?php
 
-//$sql = "SELECT * from movies ORDER BY year_made ASC;";
-// BUild a SQL query "SELECT year_made, COUNT(native_name) AS movie_count from movies ORDER by year_made DSC"
-
-$sql = "SELECT year_made, COUNT(native_name) AS movie_count FROM movies GROUP BY year_made ORDER BY year_made DESC;";
-
-
+$sql = "SELECT * from people ORDER BY first_name ASC;";
 $result = $db->query($sql);
 
                 if ($result->num_rows > 0) {
                     // output data of each row
                     while($row = $result->fetch_assoc()) {
                         echo '<tr>
-                                <td>'.$row["year_made"].'</td>
-                                <td>'.$row["movie_count"].' </span> </td>
-                              
+                                <td>'.$row["people_id"].'</td>
+                                <td>'.$row["screen_name"].' </span> </td>
+                                <td>'.$row["first_name"].'</td>
+                                <td>'.$row["middle_name"].'</td>
+                                <td>'.$row["last_name"].'</td>
+                                <td>'.$row["image_name"].'</td>
                             </tr>';
                     }//end while
                 }//end if

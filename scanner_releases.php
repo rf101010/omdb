@@ -23,57 +23,35 @@
               <thead>
                 <tr id="table-first-row">
                         <th>id</th>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th>Open Date</th>
-                        <th>Dependency Date</th>
-                        <th>Content Date</th>
-                        <th>RTM Date(s)</th>
-                        <th>Manager</th>
-                        <th>Author</th>
-                        <th>BOM ID</th>
+                        <th>Local Name</th>
+                        <th>English Name</th>
+                        <th>Year </th>
                 </tr>
               </thead>
 
               <tfoot>
                 <tr>
-                        <th>Name</th>
-                        <th>Name</th>
-                        <th>Type</th>
-                        <th>Status</th>
-                        <th>Open Date</th>
-                        <th>Dependency Date</th>
-                        <th>Content Date</th>
-                        <th>RTM Date(s)</th>
-                        <th>Manager</th>
-                        <th>Author</th>
-                        <th>BOM ID</th>
-                </tr>
+                <th>id</th>
+                        <th>Native Name</th>
+                        <th>English Name</th>
+                        <th>Year </th></tr>
               </tfoot>
 
               <tbody>
 
               <?php
 
-$sql = "SELECT * from releases ORDER BY rtm_date ASC;";
+$sql = "SELECT * from movies ORDER BY year_made ASC;";
 $result = $db->query($sql);
 
                 if ($result->num_rows > 0) {
                     // output data of each row
                     while($row = $result->fetch_assoc()) {
                         echo '<tr>
-                                <td>'.$row["id"].'</td>
-                                <td>'.$row["name"].' </span> </td>
-                                <td>'.$row["type"].'</td>
-                                <td>'.$row["status"].'</td>
-                                <td>'.$row["open_date"].' </span> </td>
-                                <td>'.$row["dependency_date"].'</td>
-                                <td>'.$row["freeze_date"].'</td>
-                                <td>'.$row["rtm_date"].' </span> </td>
-                                <td>'.$row["manager"].' </span> </td>
-                                <td>'.$row["author"].' </span> </td>
-                                <td>'.$row["app_id"].' </span> </td>
+                                <td>'.$row["movie_id"].'</td>
+                                <td>'.$row["native_name"].' </span> </td>
+                                <td>'.$row["english_name"].'</td>
+                                <td>'.$row["year_made"].'</td>
                             </tr>';
                     }//end while
                 }//end if
