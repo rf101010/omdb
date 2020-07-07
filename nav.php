@@ -1,7 +1,7 @@
 <?php
   require_once('initialize.php');
 ?>
-<!-- test -->
+
 <!DOCTYPE html>
 
 <html>
@@ -17,11 +17,7 @@
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="styles/custom_nav.css" type="text/css">
-
-        <title>Online Movie Database</title>
-
-        <title>OMDB</title>
-        master
+        <title>A Basic Composer</title>
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap.min.css" rel="stylesheet"/>
         <link rel="stylesheet" href="./mainStyleSheet.css">
@@ -31,34 +27,35 @@
 <div id="wrap">
     <div id="nav">
         <ul>
-           
+            <a href="index.php">
+              <li class="horozontal-li-logo">
+              <img src ="./images/omdb_logo.png">
+              <br/>Online Movie Database</li>
+            </a>
 
             <a href="index.php">
               <li <?php if($nav_selected == "HOME"){ echo 'class="current-page"'; } ?>>
-              <img src="./images/omdb_home.png">
+              <img src="./images/home.png">
               <br/>Home</li>
             </a>
 
-            <a href="list_movies.php">
-              <li <?php if($nav_selected == "Movies"){ echo 'class="current-page"'; } ?>>
-                <img src="./images/Movies.png">
+            <a href="movies.php">
+              <li <?php if($nav_selected == "MOVIES"){ echo 'class="current-page"'; } ?>>
+                <img src="./images/movies.png">
                 <br/>Movies</li>
             </a>
 
             <a href="people.php">
-              <li <?php if($nav_selected == "People"){ echo 'class="current-page"'; } ?>>
+              <li <?php if($nav_selected == "PEOPLE"){ echo 'class="current-page"'; } ?>>
               <img src="./images/people.png">
               <br/>People</li>
             </a>
 
             <a href="songs.php">
-              <li <?php if($nav_selected == "songs"){ echo 'class="current-page"'; } ?>>
+              <li <?php if($nav_selected == "SONGS"){ echo 'class="current-page"'; } ?>>
                 <img src="./images/songs.png">
                 <br/>Songs</li>
             </a>
-
-            
-
 
             <a href="reports.php">
               <li <?php if($nav_selected == "REPORTS"){ echo 'class="current-page"'; } ?>>
@@ -66,19 +63,31 @@
               <br/>Reports</li>
             </a>
 
+           <a href="puzzles.php">
+              <li <?php if($nav_selected == "PUZZLES"){ echo 'class="current-page"'; } ?>>
+                <img src="./images/puzzles.png">
+                <br/>Puzzles</li>
+            </a>
 
-          
 
+        <a href="setup.php">
+          <li <?php if($nav_selected == "SETUP"){ echo 'class="current-page"'; } ?>>
+            <img src="./images/setup.png">
+            <br/>Setup</li>
+        </a>
 
-        
-
-      
+        <a href="about.php">
+          <li <?php if($nav_selected == "ABOUT"){ echo 'class="current-page"'; } ?>>
+            <img src="./images/about.png">
+            <br/>About</li>
+        </a>
 
         <a href="help.php">
           <li <?php if($nav_selected == "HELP"){ echo 'class="current-page"'; } ?>>
             <img src="./images/help.png">
-            <br/>help</li>
+            <br/>Help</li>
         </a>
+
 
       </ul>
       <br />
@@ -95,26 +104,24 @@
         <?php
             if ($nav_selected == "HOME") {
                 include("./index.php");
-            } elseif ($nav_selected == "LIST") {
-                include("./left_menu_list.php");
-            } elseif ($nav_selected == "TIMELINE") {
-                include("./left_menu_timeline.php");
+            } elseif ($nav_selected == "MOVIES") {
+                include("./left_menu_movies.php");
+            } elseif ($nav_selected == "PEOPLE") {
+                include("./left_menu_people.php");
+            } elseif ($nav_selected == "SONGS") {
+                include("./left_menu_songs.php");
             } elseif ($nav_selected == "REPORTS") {
                 include("./left_menu_reports.php");
-            } elseif ($nav_selected == "SCANNER") {
-                include("./left_menu_scanner.php");
-            } elseif ($nav_selected == "HISTORY") {
-                include("./left_menu_history.php");
-            } elseif ($nav_selected == "TREND") {
-              include("./left_menu_trend.php");
-           } elseif ($nav_selected == "SETUP") {
+            } elseif ($nav_selected == "PUZZLES") {
+                include("./left_menu_puzzles.php");
+            }  elseif ($nav_selected == "SETUP") {
             include("./left_menu_setup.php");
           } elseif ($nav_selected == "ABOUT") {
           include("./left_menu_about.php");
           }elseif ($nav_selected == "HELP") {
                 include("./left_menu_help.php");
             } else {
-                include("./left_menu.php");
+                include("./left_menu_movies.php");
             }
         ?>
         </td>
