@@ -259,7 +259,7 @@ $keyword = $keyword  .$row["keyword"] . ",";
         <?php
 
         // query string for the Query A.1
-        $sql_A4 = "SELECT keyword FROM movie_keywords WHERE movie_id=" . $movie_id;
+        $sql_A4 = "SELECT GROUP_CONCAT(keyword) AS keyword FROM movie_keywords WHERE movie_id=" . $movie_id;
 
         if (!$sql_A4_result = $db->query($sql_A4)) {
           die('There was an error running query[' . $connection->error . ']');
@@ -444,7 +444,8 @@ media (from songs_media - show the IDs as comma separated list, media_link will 
                    INNER JOIN song_people ON song_people.song_id = songs.song_id 
                    INNER JOIN people ON song_people.people_id = people.people_id 
                    INNER JOIN song_media ON song_media.song_id = songs.song_id 
-                   INNER JOIN song_keywords ON movie_song.song_id = song_keywords.song_id 
+                   INNER JOIN (SELECT GROUP_CONCAT(keyword) AS keyword, song_id
+                              FROM song_keywords GROUP by song_id) song_keywords ON movie_song.song_id = song_keywords.song_id 
                    WHERE movie_song.movie_id=" . $movie_id;
 
         if (!$sql_C1_result = $db->query($sql_C1)) {
