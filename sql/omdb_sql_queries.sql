@@ -44,7 +44,8 @@ ORDER BY `movies`.`movie_id` ASC
 --  Reynold,
 --  Query 4) Get all the movies and the corresponding people info
 
-SELECT movies.movie_id, 
+SELECT movies.movie_id,
+       native_name,
        movie_people.people_id, 
        stage_name, 
        role,
