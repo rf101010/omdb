@@ -13,6 +13,8 @@ SELECT movies.movies_id, native_name, movie_media_id, m_link, m_link_type FROM m
 
 
 --  Ryan, Query 5)
+SELECT people_id, stage_name, first_name, middle_name, last_name, gender, image_name
+FROM people
 
 
 --  Samantha, Query 6)
