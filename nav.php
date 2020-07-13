@@ -17,7 +17,7 @@
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="styles/custom_nav.css" type="text/css">
-        <title>A Basic Composer</title>
+        <title>Online Movie Database</title>
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap.min.css" rel="stylesheet"/>
         <link rel="stylesheet" href="./mainStyleSheet.css">
@@ -41,7 +41,7 @@
 
             <a href="movies.php">
               <li <?php if($nav_selected == "MOVIES"){ echo 'class="current-page"'; } ?>>
-                <img src="./images/movies.png">
+                <img src="./images/Movies.png">
                 <br/>Movies</li>
             </a>
 
