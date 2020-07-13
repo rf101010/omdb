@@ -1,4 +1,4 @@
--- Jed 
+-- Jed
 -- Query 1) Get all the movies and their trivia (so that we can show this information in a table). Return NULL if the trivia doesn’t exist for a movie. This ensures that we show movies in UI with blanks for the trivia.
 
 SELECT movies.movie_id, native_name, movie_trivia_id, movie_trivia_name FROM movies LEFT OUTER JOIN movie_trivia ON movies.movie_id = movie_trivia.movie_id
@@ -7,7 +7,7 @@ SELECT movies.movie_id, native_name, movie_trivia_id, movie_trivia_name FROM mov
 
 
 --  Mel, Query 3)
-
+SELECT movies.movies_id, native_name, movie_media_id, m_link, m_link_type FROM movies INNER JOIN movie_media on movies.movie_id = movie_trivia.movie_id
 
 --  Reynold, Query 4)
 
