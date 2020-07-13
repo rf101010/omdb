@@ -60,6 +60,7 @@ FROM   movies
 
 --  Ryan, 
 -- Query 5) Get the list of all people in the database
+SELECT * FROM people
 
 --  Samantha, 
 -- Query 6) Get the list of all people in the database. And also show their association with the movies along with the “role” and “screen_name”. 
