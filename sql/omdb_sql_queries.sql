@@ -1,4 +1,4 @@
-
+-- Jed
 -- Query 1) Get all the movies and their trivia (so that we can show this information in a table). Return NULL if the trivia doesn’t exist for a movie. This ensures that we show movies in UI with blanks for the trivia.
 
 SELECT movies.movie_id, 
