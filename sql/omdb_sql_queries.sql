@@ -58,8 +58,9 @@ FROM   movies
        				ON people.people_id = movie_people.people_id
 
 
---  Ryan, 
+--  Ryan,  
 -- Query 5) Get the list of all people in the database
+SELECT * FROM people
 
 
 
@@ -116,3 +117,6 @@ SELECT movies.movie_id,
 FROM   movies 
        LEFT OUTER JOIN movie_data 
                     ON movies.movie_id = movie_data.movie_id
+                    
+--Comment Added by Reynold
+--Comment Added by Jonathan
