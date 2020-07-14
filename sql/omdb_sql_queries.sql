@@ -1,4 +1,4 @@
-
+-- Jed
 -- Query 1) Get all the movies and their trivia (so that we can show this information in a table). Return NULL if the trivia doesn’t exist for a movie. This ensures that we show movies in UI with blanks for the trivia.
 
 SELECT movies.movie_id, 
@@ -62,8 +62,29 @@ FROM   movies
 -- Query 5) Get the list of all people in the database
 SELECT * FROM people
 
+
+
 --  Samantha, 
 -- Query 6) Get the list of all people in the database. And also show their association with the movies along with the “role” and “screen_name”. 
+
+SELECT movies.movie_id, 
+	   native_name,
+       movie_people.people_id, 
+       stage_name, 
+       role,
+       first_name,
+       middle_name,
+       last_name,
+       gender,
+       image_name,
+       screen_name
+FROM   movies 
+       LEFT OUTER JOIN movie_people 
+                    ON movies.movie_id = movie_people.movie_id 
+       LEFT OUTER JOIN people
+       				ON people.people_id = movie_people.people_id
+
+
 
 -- (All), Query 33)
 -- Connect all the tables from “movies” perspective; You should show ALL movies. Show NULLs if there is no corresponding movie_data or media or songs or people
