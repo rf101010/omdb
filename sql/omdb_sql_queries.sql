@@ -1,41 +1,41 @@
 -- Jed
 -- Query 1) Get all the movies and their trivia (so that we can show this information in a table). Return NULL if the trivia doesn’t exist for a movie. This ensures that we show movies in UI with blanks for the trivia.
 
-SELECT movies.movie_id, 
-       native_name, 
-       movie_trivia_id, 
-       movie_trivia_name 
-FROM   movies 
-       LEFT OUTER JOIN movie_trivia 
-                    ON movies.movie_id = movie_trivia.movie_id 
+SELECT movies.movie_id,
+       native_name,
+       movie_trivia_id,
+       movie_trivia_name
+FROM   movies
+       LEFT OUTER JOIN movie_trivia
+                    ON movies.movie_id = movie_trivia.movie_id
 
 
 
---  Jonathan, 
+--  Jonathan,
 -- Query 2) Get all the movies and the quotes in those movies (so that we can show this information in a table)
 
-SELECT movies.movie_id, 
-       native_name, 
-       movie_quote_id, 
-       movie_quote_name 
-FROM   movies 
-       LEFT OUTER JOIN movie_quotes 
+SELECT movies.movie_id,
+       native_name,
+       movie_quote_id,
+       movie_quote_name
+FROM   movies
+       LEFT OUTER JOIN movie_quotes
                     ON movies.movie_id = movie_quotes.movie_id
 
 
 
---  Mel, 
+--  Mel,
 -- Query 3) Get all the movies and the corresponding media.
 
 
-SELECT movies.movie_id, 
-       native_name, 
-       movie_media_id, 
+SELECT movies.movie_id,
+       native_name,
+       movie_media_id,
        m_link,
        m_link_type
-FROM   movies 
-       LEFT OUTER JOIN movie_media 
-                    ON movies.movie_id = movie_media.movie_id  
+FROM   movies
+       LEFT OUTER JOIN movie_media
+                    ON movies.movie_id = movie_media.movie_id
 ORDER BY `movies`.`movie_id` ASC
 
 
@@ -45,32 +45,32 @@ ORDER BY `movies`.`movie_id` ASC
 
 SELECT movies.movie_id,
        native_name,
-       movie_people.people_id, 
-       stage_name, 
+       movie_people.people_id,
+       stage_name,
        role,
        first_name,
        last_name,
        screen_name
-FROM   movies 
-       LEFT OUTER JOIN movie_people 
-                    ON movies.movie_id = movie_people.movie_id 
+FROM   movies
+       LEFT OUTER JOIN movie_people
+                    ON movies.movie_id = movie_people.movie_id
        LEFT OUTER JOIN people
        				ON people.people_id = movie_people.people_id
 
 
---  Ryan,  
+--  Ryan,
 -- Query 5) Get the list of all people in the database
 SELECT * FROM people
 
 
 
---  Samantha, 
--- Query 6) Get the list of all people in the database. And also show their association with the movies along with the “role” and “screen_name”. 
+--  Samantha,
+-- Query 6) Get the list of all people in the database. And also show their association with the movies along with the “role” and “screen_name”.
 
-SELECT movies.movie_id, 
+SELECT movies.movie_id,
 	   native_name,
-       movie_people.people_id, 
-       stage_name, 
+       movie_people.people_id,
+       stage_name,
        role,
        first_name,
        middle_name,
@@ -78,9 +78,9 @@ SELECT movies.movie_id,
        gender,
        image_name,
        screen_name
-FROM   movies 
-       LEFT OUTER JOIN movie_people 
-                    ON movies.movie_id = movie_people.movie_id 
+FROM   movies
+       LEFT OUTER JOIN movie_people
+                    ON movies.movie_id = movie_people.movie_id
        LEFT OUTER JOIN people
        				ON people.people_id = movie_people.people_id
 
@@ -89,18 +89,18 @@ FROM   movies
 -- (All), Query 33)
 -- Connect all the tables from “movies” perspective; You should show ALL movies. Show NULLs if there is no corresponding movie_data or media or songs or people
 
-SELECT movies.movie_id, 
-       native_name, 
-       english_name, 
-       year_made, 
-       tag_line, 
-       language, 
-       country, 
-       genre, 
-       plot, 
-       (SELECT COUNT(movie_trivia_id) 
-        FROM movie_trivia 
-        WHERE movies.movie_id = movie_trivia.movie_id) AS movie_trivia_count, 
+SELECT movies.movie_id,
+       native_name,
+       english_name,
+       year_made,
+       tag_line,
+       language,
+       country,
+       genre,
+       plot,
+       (SELECT COUNT(movie_trivia_id)
+        FROM movie_trivia
+        WHERE movies.movie_id = movie_trivia.movie_id) AS movie_trivia_count,
        (SELECT COUNT(keyword)
         FROM movie_keywords
         WHERE movies.movie_id = movie_keywords.movie_id) AS movie_keyword_count,
@@ -113,11 +113,23 @@ SELECT movies.movie_id,
         (SELECT COUNT(people_id)
          FROM movie_people
          WHERE movies.movie_id = movie_people.movie_id) movie_people_count
-        
-FROM   movies 
-       LEFT OUTER JOIN movie_data 
+
+FROM   movies
+       LEFT OUTER JOIN movie_data
                     ON movies.movie_id = movie_data.movie_id
-                    
+
+
+--7.40 Mel
+SELECT
+    people.stage_name,
+    song_people.people_id,
+    COUNT(*)
+FROM
+    song_people
+JOIN people WHERE people.people_id = song_people.people_id
+GROUP BY
+    people_id
+
 --Comment Added by Reynold
 --Comment Added by Jonathan
 --Super Secret Comment by Reynold
