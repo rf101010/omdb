@@ -210,7 +210,4 @@ FROM movies
 WHERE native_name LIKE '%v%' AND native_name LIKE '%o%' AND
 LENGTH(native_name) = 7
 
---Comment Added by Reynold
---Comment Added by Jonathan
---Super Secret Comment by Reynold
--- Super Super Comment by Jed
+
