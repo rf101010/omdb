@@ -164,7 +164,7 @@ movie_id, native_name, english_name, year_made, role, screen_name
 
 <div class="right-content">
   <div class="container">
-    <h3 style="color: #01B0F1;">[A.3] Movie -> Media</h3>
+    <h3 style="color: #01B0F1;">[C] People -> Movies</h3>
 
 
     <table class="display" id="movie_media_table" style="width:100%">
@@ -226,7 +226,7 @@ role (from song_people)
 
 <div class="right-content">
   <div class="container">
-    <h3 style="color: #01B0F1;">[A.4] Movie -> Key Words</h3>
+    <h3 style="color: #01B0F1;">[D] People-> Songs </h3>
 
     <table class="display" id="keywords_table" style="width:100%">
       <div class="table responsive">
