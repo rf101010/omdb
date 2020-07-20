@@ -366,7 +366,7 @@ role (from song_people)
             echo '<tr>
                       <td>' . $D1_tuple["song_ID"] . '</td>
                       <td>' . $D1_tuple["title"] . '</td>
-                      <td>' . $D1_tuple["lyrics"] . '</td>
+                      <td>' . substr($D1_tuple["lyrics"],0,30) . '</td>
                       <td>' . $D1_tuple["role"] . ' </td>
                   </tr>';
           } //end while
