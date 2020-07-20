@@ -131,6 +131,7 @@ GROUP BY
     people_id
 
 
+
 -- 7.40 Alternative
 SELECT   stage_name,
          Count(song_id) AS song_count
