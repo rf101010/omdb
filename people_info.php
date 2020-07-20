@@ -1,5 +1,5 @@
 <?php
-$nav_selected = "MOVIES";
+$nav_selected = "PEOPLE";
 $left_buttons = "YES";
 $left_selected = "NO";
 
@@ -13,20 +13,19 @@ global $db;
 This page displays the information about people given a people_id.
 The input is "people_id". 
 This "people_id" is passed to people_info.php as a URL parameter.
+
+
 This pages displays the people information in four sections.
 [A] PEOPLE data 
 [B] PEOPLE aggregation
 [C] PEOPLE - Movies
 [D] PEOPLE - Songs
 The above three sections are outlined below
-[A] PEOPLE data 
-people_id
-stage_name
-first_name
-middle_name
-last_name
-gender
-image_name
+
+
+
+
+
 [B] PEOPLE aggegation
 (display this as a table or name value pairs;
 Do whatever is easier for you)
@@ -36,9 +35,15 @@ No of Movies as <role3>:
 No of Songs as Composer: 
 No of Songs as Lyricist:
 No of Songs as Music Director:
+
+
+
 [C] PEOPLE - Movies
 (display this as a table)
 movie_id, native_name, english_name, year_made, role, screen_name
+
+
+
 [D} PEOPLE - Songs
 Display Type: Show this as a table
 song_id
@@ -47,36 +52,37 @@ lyrics (show first 30 characters)
 role (from song_people)
 ===================================================================================================== -->
 
-<!-- ========== Getting the movie id =====================================
-// This is the movie_id coming to this page as GET parameter
-// We will fetch it and save it as $movie_id to be used in our queries
-======================================================================== -->
 <?php
-if (isset($_GET['movie_id'])) {
-  $movie_id = mysqli_real_escape_string($db, $_GET['movie_id']);
+if (isset($_GET['people_id'])) {
+  $people_id = mysqli_real_escape_string($db, $_GET['people_id']);
 }
 ?>
 
 
-<!-- ================ [A.1] Basic Data (table: movies) ======================
-Display Type: Name - value pairs
-movie_id
-native_name 
-english_name 
-year_made
+<!-- ================ [A] Basic Data (table: people) ======================
+--Completed by Jed
+
+[A] PEOPLE data 
+people_id
+stage_name
+first_name
+middle_name
+last_name
+gender
+image_name
 ========================================================================= -->
 
 <div class="right-content">
   <div class="container">
-    <h3 style="color: #01B0F1;">[A.1] Movies -> Basic Data</h3>
+    <h3 style="color: #01B0F1;">[A] People -> Basic Data</h3>
 
     <?php
 
 
-    // query string for the Query A.1
-    $sql_A1 = "SELECT movie_id, native_name, english_name, year_made 
-               FROM movies 
-               WHERE movie_id =" . $movie_id;
+    // query string for the Query A
+    $sql_A1 = "SELECT people_id, stage_name, first_name, middle_name, last_name, gender, image_name
+               FROM people 
+               WHERE people_id =" . $people_id;
 
     if (!$sql_A1_result = $db->query($sql_A1)) {
       die('There was an error running query[' . $connection->error . ']');
@@ -84,10 +90,13 @@ year_made
 
     if ($sql_A1_result->num_rows > 0) {
       $a1_tuple = $sql_A1_result->fetch_assoc();
-      echo '<br> Movie ID : ' . $a1_tuple["movie_id"] .
-        '<br> Native Name : ' . $a1_tuple["native_name"] .
-        '<br> English Name : ' . $a1_tuple["english_name"] .
-        '<br> Year Made :  ' . $a1_tuple["year_made"];
+      echo '<br> People ID : ' . $a1_tuple["people_id"] .
+        '<br> Stage Name : ' . $a1_tuple["stage_name"] .
+        '<br> First Name : ' . $a1_tuple["first_name"] .
+        '<br> Middle Name :  ' . $a1_tuple["middle_name"].
+        '<br> Last Name :  ' . $a1_tuple["last_name"].
+        '<br> Gender :  ' . $a1_tuple["gender"].
+        '<br> Image Name :  ' . $a1_tuple["image_name"];
     } //end if
     else {
       echo "0 results";
@@ -100,13 +109,20 @@ year_made
 
 
 
-<!-- ================ [A.2] Extended Data (table: movie_data) ======================
-Display Type: Name - value pairs
-language
-country
-genre
-plot
-TODO: Copy the code snippet from A.1, change the code to reflect Extended data
+<!-- ================ [B] ======================
+[B] PEOPLE aggegation
+(display this as a table or name value pairs;
+Do whatever is easier for you)
+No of Movies as <role1>: 
+No of Movies as <role2>: 
+No of Movies as <role3>: 
+No of Songs as Composer: 
+No of Songs as Lyricist:
+No of Songs as Music Director:
+
+
+
+
 ========================================================================= -->
 <div class="right-content">
   <div class="container">
@@ -138,11 +154,12 @@ TODO: Copy the code snippet from A.1, change the code to reflect Extended data
 </div>
 
 
-<!-- ================ [A.3] Movie Media (table: movie_media) ======================
-Display Type: Show this as a table
-m_media_id
-m_link  (preferable to display the media on the page)
-m_link_type
+<!-- ================ [C] ======================
+[C] PEOPLE - Movies
+(display this as a table)
+movie_id, native_name, english_name, year_made, role, screen_name
+
+
 ========================================================================= -->
 
 <div class="right-content">
@@ -196,12 +213,15 @@ m_link_type
 
 
 
-<!-- ================ [A.4] Movie Key Words (table: movie_keywords) ======================
-Display Type: Name - value pairs
-keywords (show it as a comma separated list) 
-ADD THIS SOMEHOW:
-$keyword = "";
-$keyword = $keyword  .$row["keyword"] . ",";
+<!-- ================ [D] ======================
+
+[D} PEOPLE - Songs
+Display Type: Show this as a table
+song_id
+title 
+lyrics (show first 30 characters)
+role (from song_people)
+
 ========================================================================= -->
 
 <div class="right-content">
@@ -251,8 +271,7 @@ $keyword = $keyword  .$row["keyword"] . ",";
 
 
 <!-- ================ [A.5] (table: movie_trivia) ======================
-Display Type: Heading and set of values (ordered by serial number starting with 1)
-trivia (show these as a list)
+DELETE
 ========================================================================= -->
 
 
@@ -306,13 +325,7 @@ trivia (show these as a list)
 
 
 <!-- ================ [B.1] People  (table: movie_people and people)   ======================
-Display Type: Show this as a table
-role 
-screen_name
-first_name
-middle_name
-last_name 
-image_name  
+DELETE
 ========================================================================= -->
 
 <div class="right-content">
@@ -377,12 +390,7 @@ image_name
 
 
 <!-- ================ [C.1] Songs (table: movie_song, songs, song_media, song_people, song_keywords)   ======================
-Display Type: Show this as a table
-title 
-lyrics (first 30 characters)
-role (from song_people)
-keywords (from song_keywords, show this info as comma separated list
-media (from songs_media - show the IDs as comma separated list, media_link will be a hyper link)
+DELETE
 ========================================================================= -->
 
 <div class="right-content">
