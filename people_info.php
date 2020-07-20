@@ -345,7 +345,7 @@ role (from song_people)
 
         <?php
 
-        // query string for the Query A.2
+        // query string for the Query 
         $sql_D1 = "SELECT songs.song_id AS song_ID, title, lyrics, song_people.role
                     FROM songs INNER JOIN song_people on songs.song_id = song_people.song_id
                     INNER JOIN people ON song_people.people_id = people.people_id
