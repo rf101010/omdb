@@ -130,7 +130,53 @@ JOIN people WHERE people.people_id = song_people.people_id
 GROUP BY
     people_id
 
---Comment Added by Reynold
---Comment Added by Jonathan
---Super Secret Comment by Reynold
--- Super Super Comment by Jed
+
+-- 7.40 Alternative
+SELECT   stage_name, 
+         Count(song_id) AS song_count 
+FROM     song_people 
+JOIN     people 
+WHERE    people.people_id = song_people.people_id 
+GROUP BY song_people.people_id
+
+
+-- 7.70 JED
+SELECT (SELECT Count(native_name) 
+        FROM   movies) AS movie_count, 
+        (SELECT Count(anagram)
+        FROM movie_anagrams) AS anagram_count,
+        (SELECT Count(movie_id)
+        FROM movie_data) AS data_count,
+        (SELECT Count(keyword)
+        FROM movie_keywords) AS keyword_count,
+        (SELECT Count(movie_media_id)
+        FROM movie_media) AS movie_media_count,
+        (SELECT Count(movie_id)
+        FROM movie_numbers) AS movie_numbers_count,
+        (SELECT Count(people_id)
+        FROM movie_people) AS movie_people_count,
+        (SELECT Count(movie_quote_id)
+        FROM movie_quotes) AS movie_quote_count,
+        (SELECT Count(song_id)
+        FROM movie_song) AS movie_song_count,
+        (SELECT Count(movie_trivia_id)
+        FROM movie_trivia) AS movie_trivia_count,
+        (SELECT Count(stage_name) 
+        FROM   people) AS people_count, 
+        (SELECT Count(people_trivia_id)
+        FROM people_trivia) AS people_trivia_count,
+        (SELECT Count(title) 
+        FROM   songs)  AS songs_count,
+        (SELECT Count(keyword)
+        FROM song_keywords) AS song_keywords_count,
+        (SELECT Count(song_media_id)
+        FROM song_media) AS song_media_count,
+        (SELECT Count(song_id)
+        FROM song_people) AS song_people_count,
+        (SELECT Count(song_trivia_id)
+        FROM song_trivia) AS song_trivia_count
+
+FROM   movies 
+LIMIT  1 
+
+
