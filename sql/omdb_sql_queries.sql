@@ -179,3 +179,18 @@ SELECT (SELECT Count(native_name)
 
 FROM   movies
 LIMIT  1
+
+
+--7.63 Ryan Flanagan
+--Given a set of characters and length, get all the movies where these characters are appearing in any order in the native_name.
+-- The length of the movie should match  the length specified in movie_numbers table.
+--For example, if I specify “f, n” and length as 5, it should return the movies “final” and “funny”
+select *
+FROM movies
+WHERE native_name LIKE '%v%' AND native_name LIKE '%o%' AND
+LENGTH(native_name) = 7
+
+--Comment Added by Reynold
+--Comment Added by Jonathan
+--Super Secret Comment by Reynold
+-- Super Super Comment by Jed
