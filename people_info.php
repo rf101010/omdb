@@ -29,7 +29,7 @@ The above three sections are outlined below
 [B] PEOPLE aggegation
 (display this as a table or name value pairs;
 Do whatever is easier for you)
-No of Movies as <role1>: 
+No of Movies as <role2>: 
 No of Movies as <role2>: 
 No of Movies as <role3>: 
 No of Songs as Composer: 
@@ -74,35 +74,35 @@ image_name
 
 <div class="right-content">
   <div class="container">
-    <h3 style="color: #01B0F1;">[A] People -> People Data</h3>
+    <h3 style="color: #02B0F2;">[A] People -> People Data</h3>
 
     <?php
 
 
     // query string for the Query A
-    $sql_A1 = "SELECT people_id, stage_name, first_name, middle_name, last_name, gender, image_name
+    $sql_A2 = "SELECT people_id, stage_name, first_name, middle_name, last_name, gender, image_name
                FROM people 
                WHERE people_id =" . $people_id;
 
-    if (!$sql_A1_result = $db->query($sql_A1)) {
+    if (!$sql_A2_result = $db->query($sql_A2)) {
       die('There was an error running query[' . $connection->error . ']');
     }
 
-    if ($sql_A1_result->num_rows > 0) {
-      $a1_tuple = $sql_A1_result->fetch_assoc();
-      echo '<br> People ID : ' . $a1_tuple["people_id"] .
-        '<br> Stage Name : ' . $a1_tuple["stage_name"] .
-        '<br> First Name : ' . $a1_tuple["first_name"] .
-        '<br> Middle Name :  ' . $a1_tuple["middle_name"].
-        '<br> Last Name :  ' . $a1_tuple["last_name"].
-        '<br> Gender :  ' . $a1_tuple["gender"].
-        '<br> Image Name :  ' . $a1_tuple["image_name"];
+    if ($sql_A2_result->num_rows > 0) {
+      $a2_tuple = $sql_A2_result->fetch_assoc();
+      echo '<br> People ID : ' . $a2_tuple["people_id"] .
+        '<br> Stage Name : ' . $a2_tuple["stage_name"] .
+        '<br> First Name : ' . $a2_tuple["first_name"] .
+        '<br> Middle Name :  ' . $a2_tuple["middle_name"].
+        '<br> Last Name :  ' . $a2_tuple["last_name"].
+        '<br> Gender :  ' . $a2_tuple["gender"].
+        '<br> Image Name :  ' . $a2_tuple["image_name"];
     } //end if
     else {
       echo "0 results";
     } //end else
 
-    $sql_A1_result->close();
+    $sql_A2_result->close();
     ?>
   </div>
 </div>
@@ -113,7 +113,7 @@ image_name
 [B] PEOPLE aggegation
 (display this as a table or name value pairs;
 Do whatever is easier for you)
-No of Movies as <role1>: 
+No of Movies as <role2>: 
 No of Movies as <role2>: 
 No of Movies as <role3>: 
 No of Songs as Composer: 
@@ -126,28 +126,123 @@ No of Songs as Music Director:
 ========================================================================= -->
 <div class="right-content">
   <div class="container">
-    <h3 style="color: #01B0F1;">[B] People -> People Aggregation</h3>
+    <h3 style="color: #02B0F2;">[B] People -> People Aggregation</h3>
 
     <?php
 
-    $sql_A2 = "SELECT language, country, genre, plot FROM `movie_data` WHERE movie_data.movie_id =" . $movie_id;
+    $sql_B1 = "SELECT  COUNT(role) AS no_as_director FROM movie_people WHERE role LIKE'%Director%' AND people_id =" . $people_id;
 
-   if (!$sql_A2_result = $db->query($sql_A2)) { 
+   if (!$sql_B1_result = $db->query($sql_B1)) { 
      die('There was an error running query[' . $connection->error . ']');
     }
 
-  if ($sql_A2_result->num_rows > 0) {
-    $a2_tuple = $sql_A2_result->fetch_assoc();
-      echo '<br> Language : ' . $a2_tuple["language"] .
-      '<br> Country : ' . $a2_tuple["country"] .
-      '<br> Genre : ' . $a2_tuple["genre"] .
-      '<br> Plot :  ' . $a2_tuple["plot"];
+  if ($sql_B1_result->num_rows > 0) {
+    $B1_tuple = $sql_B1_result->fetch_assoc();
+      echo '<br> Number of Movies as Director : ' . $B1_tuple["no_as_director"];
   } //end if
   else {
     echo "0 results";
   } //end else
 
-  $sql_A2_result->close(); 
+  $sql_B1_result->close(); 
+
+
+
+  $sql_B2= "SELECT  COUNT(role) AS no_as_lead_actor FROM movie_people WHERE role LIKE'%Lead Actor%' AND people_id =" . $people_id;
+
+   if (!$sql_B2_result = $db->query($sql_B2)) { 
+     die('There was an error running query[' . $connection->error . ']');
+    }
+
+  if ($sql_B2_result->num_rows > 0) {
+    $B2_tuple = $sql_B2_result->fetch_assoc();
+      echo '<br> Number of Movies as Lead Actor : ' . $B2_tuple["no_as_lead_actor"];
+      
+  } //end if
+  else {
+    echo "0 results";
+  } //end else
+
+  $sql_B2_result->close(); 
+
+
+
+  $sql_B3= "SELECT  COUNT(role) AS no_as_lead_actress FROM movie_people WHERE role LIKE'%Lead Actress%' AND people_id =" . $people_id;
+
+  if (!$sql_B3_result = $db->query($sql_B3)) { 
+    die('There was an error running query[' . $connection->error . ']');
+   }
+
+ if ($sql_B3_result->num_rows > 0) {
+   $B3_tuple = $sql_B3_result->fetch_assoc();
+     echo '<br> Number of Movies as Lead Actress : ' . $B3_tuple["no_as_lead_actress"];
+    
+ } //end if
+ else {
+   echo "0 results";
+ } //end else
+
+ $sql_B3_result->close(); 
+
+
+
+ $sql_B4= "SELECT  COUNT(song_id) AS no_as_composer FROM song_people WHERE role LIKE'%Composer%' AND people_id =" . $people_id;
+
+ if (!$sql_B4_result = $db->query($sql_B4)) { 
+   die('There was an error running query[' . $connection->error . ']');
+  }
+
+if ($sql_B4_result->num_rows > 0) {
+  $B4_tuple = $sql_B4_result->fetch_assoc();
+    echo '<br> Number of Songs as Composer : ' . $B4_tuple["no_as_composer"];
+   
+} //end if
+else {
+  echo "0 results";
+} //end else
+
+$sql_B4_result->close(); 
+
+
+
+$sql_B5= "SELECT  COUNT(song_id) AS no_as_lyricist FROM song_people WHERE role LIKE'%Lyricist%' AND people_id =" . $people_id;
+
+if (!$sql_B5_result = $db->query($sql_B5)) { 
+  die('There was an error running query[' . $connection->error . ']');
+ }
+
+if ($sql_B5_result->num_rows > 0) {
+ $B5_tuple = $sql_B5_result->fetch_assoc();
+   echo '<br> Number of Songs as Lyricist : ' . $B5_tuple["no_as_lyricist"];
+} //end if
+else {
+ echo "0 results";
+} //end else
+
+$sql_B5_result->close(); 
+
+
+
+$sql_B6= "SELECT  COUNT(song_id) AS no_as_music_dir FROM song_people WHERE role LIKE'%Music Director%' AND people_id =" . $people_id;
+
+if (!$sql_B6_result = $db->query($sql_B6)) { 
+  die('There was an error running query[' . $connection->error . ']');
+ }
+
+if ($sql_B6_result->num_rows > 0) {
+ $B6_tuple = $sql_B6_result->fetch_assoc();
+   echo '<br> Number of Songs as Music Director : ' . $B6_tuple["no_as_music_dir"];
+} //end if
+else {
+ echo "0 results";
+} //end else
+
+$sql_B6_result->close(); 
+
+
+
+
+
     ?>
 
   </div>
@@ -164,10 +259,10 @@ movie_id, native_name, english_name, year_made, role, screen_name
 
 <div class="right-content">
   <div class="container">
-    <h3 style="color: #01B0F1;">[C] People -> Movies</h3>
+    <h3 style="color: #02B0F2;">[C] People -> Movies</h3>
 
 
-    <table class="display" id="movie_media_table" style="width:100%">
+    <table class="display" id="movie_media_table" style="width:200%">
       <div class="table responsive">
 
         <thead>
@@ -181,14 +276,14 @@ movie_id, native_name, english_name, year_made, role, screen_name
 
         <?php
 
-        // query string for the Query A.1
+        // query string for the Query A.2
         $sql_A3 = "SELECT movie_id, movie_media_id, m_link, m_link_type FROM movie_media WHERE movie_id =" . $movie_id;
 
         if (!$sql_A3_result = $db->query($sql_A3)) {
           die('There was an error running query[' . $connection->error . ']');
         }
 
-        // this is 1 to many relationship
+        // this is 2 to many relationship
         // So, many tuples may be returned
         // We will display those in a table in a while loop
         if ($sql_A3_result->num_rows > 0) {
@@ -226,9 +321,9 @@ role (from song_people)
 
 <div class="right-content">
   <div class="container">
-    <h3 style="color: #01B0F1;">[D] People-> Songs </h3>
+    <h3 style="color: #02B0F2;">[D] People-> Songs </h3>
 
-    <table class="display" id="keywords_table" style="width:100%">
+    <table class="display" id="keywords_table" style="width:200%">
       <div class="table responsive">
 
         <thead>
@@ -240,7 +335,7 @@ role (from song_people)
 
         <?php
 
-        // query string for the Query A.1
+        // query string for the Query A.2
         $sql_A4 = "SELECT keyword FROM movie_keywords WHERE movie_id=" . $movie_id;
 
         // echo $sql_A4;
@@ -249,7 +344,7 @@ role (from song_people)
           die('There was an error running query[' . $db->error . ']');
         }
 
-        // this is 1 to many relationship
+        // this is 2 to many relationship
         // So, many tuples may be returned
         // We will display those in a table in a while loop
         if ($sql_A4_result->num_rows > 0) {
@@ -278,9 +373,9 @@ DELETE
 
 <div class="right-content">
   <div class="container">
-    <h3 style="color: #01B0F1;">[A.5] Movie -> Trivia</h3>
+    <h3 style="color: #02B0F2;">[A.5] Movie -> Trivia</h3>
 
-    <table class="display" id="trivia_table" style="width:100%">
+    <table class="display" id="trivia_table" style="width:200%">
       <div class="table responsive">
 
         <thead>
@@ -292,25 +387,25 @@ DELETE
 
         <?php
 
-        // query string for the Query A.1
+        // query string for the Query A.2
         $sql_A5 = "SELECT movie_trivia_name FROM `movie_trivia` WHERE movie_id=" . $movie_id;
 
         if (!$sql_A5_result = $db->query($sql_A5)) {
           die('There was an error running query[' . $db->error . ']');
         }
 
-        // this is 1 to many relationship
+        // this is 2 to many relationship
         // So, many tuples may be returned
         // We will display those in a table in a while loop
         if ($sql_A5_result->num_rows > 0) {
           // output data of each row
-          $s_no = 1;
+          $s_no = 2;
           while ($a5_tuple = $sql_A5_result->fetch_assoc()) {
             echo '<tr>
                      <td> ' .$s_no .' : </td>
                       <td>' . $a5_tuple["movie_trivia_name"] . ' </span> </td>
                   </tr>';
-            $s_no = $s_no + 1;
+            $s_no = $s_no + 2;
           } //end while
 
         } //end second if 
@@ -324,15 +419,15 @@ DELETE
 
 
 
-<!-- ================ [B.1] People  (table: movie_people and people)   ======================
+<!-- ================ [B.2] People  (table: movie_people and people)   ======================
 DELETE
 ========================================================================= -->
 
 <div class="right-content">
   <div class="container">
-    <h3 style="color: #01B0F1;">[B.1] Movie -> People</h3>
+    <h3 style="color: #02B0F2;">[B.2] Movie -> People</h3>
 
-    <table class="display" id="movie_people_table" style="width:100%">
+    <table class="display" id="movie_people_table" style="width:200%">
       <div class="table responsive">
 
         <thead>
@@ -350,37 +445,37 @@ DELETE
 
         <?php
 
-        // query string for the Query A.1
-        $sql_B1 = "SELECT stage_name, first_name, middle_name, last_name, gender, `role`, screen_name, image_name 
+        // query string for the Query A.2
+        $sql_B2 = "SELECT stage_name, first_name, middle_name, last_name, gender, `role`, screen_name, image_name 
                    FROM movie_people INNER JOIN people 
                    ON movie_people.people_id = people.people_id 
                    WHERE movie_people.movie_id=" . $movie_id;
 
 
-        if (!$sql_B1_result = $db->query($sql_B1)) {
+        if (!$sql_B2_result = $db->query($sql_B2)) {
           die('There was an error running query[' . $connection->error . ']');
         }
 
-        // this is 1 to many relationship
+        // this is 2 to many relationship
         // So, many tuples may be returned
         // We will display those in a table in a while loop
-        if ($sql_B1_result->num_rows > 0) {
+        if ($sql_B2_result->num_rows > 0) {
           // output data of each row
-          while ($b1_tuple = $sql_B1_result->fetch_assoc()) {
+          while ($b2_tuple = $sql_B2_result->fetch_assoc()) {
             echo '<tr>
-                      <td>' . $b1_tuple["stage_name"] . '</td>
-                      <td>' . $b1_tuple["first_name"] . '</td>
-                      <td>' . $b1_tuple["middle_name"] . '</td>
-                      <td>' . $b1_tuple["last_name"] . '</td>
-                      <td>' . $b1_tuple["role"] . '</td>
-                      <td>' . $b1_tuple["screen_name"] . '</td>
-                      <td>' . $b1_tuple["image_name"] . ' </span> </td>
+                      <td>' . $b2_tuple["stage_name"] . '</td>
+                      <td>' . $b2_tuple["first_name"] . '</td>
+                      <td>' . $b2_tuple["middle_name"] . '</td>
+                      <td>' . $b2_tuple["last_name"] . '</td>
+                      <td>' . $b2_tuple["role"] . '</td>
+                      <td>' . $b2_tuple["screen_name"] . '</td>
+                      <td>' . $b2_tuple["image_name"] . ' </span> </td>
                   </tr>';
           } //end while
 
         } //end second if 
 
-        $sql_B1_result->close();
+        $sql_B2_result->close();
         ?>
 
     </table>
@@ -389,15 +484,15 @@ DELETE
 
 
 
-<!-- ================ [C.1] Songs (table: movie_song, songs, song_media, song_people, song_keywords)   ======================
+<!-- ================ [C.2] Songs (table: movie_song, songs, song_media, song_people, song_keywords)   ======================
 DELETE
 ========================================================================= -->
 
 <div class="right-content">
   <div class="container">
-    <h3 style="color: #01B0F1;">[C.1] Movie -> Songs</h3>
+    <h3 style="color: #02B0F2;">[C.2] Movie -> Songs</h3>
 
-    <table class="display" id="songs_table" style="width:100%">
+    <table class="display" id="songs_table" style="width:200%">
       <div class="table responsive">
 
         <thead>
@@ -409,31 +504,31 @@ DELETE
 
         <?php
 
-        // query string for the Query A.1
-        $sql_C1 = "SELECT title, LEFT(lyrics,10) AS lyrics10
+        // query string for the Query A.2
+        $sql_C2 = "SELECT title, LEFT(lyrics,20) AS lyrics20
                   FROM songs INNER JOIN movie_song 
                   ON (movie_song.song_id = songs.song_id)
                   WHERE movie_id=" . $movie_id;
 
-        if (!$sql_C1_result = $db->query($sql_C1)) {
+        if (!$sql_C2_result = $db->query($sql_C2)) {
           die('There was an error running query[' . $db->error . ']');
         }
 
-        // this is 1 to many relationship
+        // this is 2 to many relationship
         // So, many tuples may be returned
         // We will display those in a table in a while loop
-        if ($sql_C1_result->num_rows > 0) {
+        if ($sql_C2_result->num_rows > 0) {
           // output data of each row
-          while ($c1_tuple = $sql_C1_result->fetch_assoc()) {
+          while ($c2_tuple = $sql_C2_result->fetch_assoc()) {
             echo '<tr>
-                      <td>' . $c1_tuple["title"] . '</td>
-                      <td>' . $c1_tuple["lyrics10"] . '</td>
+                      <td>' . $c2_tuple["title"] . '</td>
+                      <td>' . $c2_tuple["lyrics20"] . '</td>
                   </tr>';
           } //end while
 
         } //end second if 
 
-        $sql_C1_result->close();
+        $sql_C2_result->close();
         ?>
 
     </table>
@@ -454,7 +549,7 @@ DELETE
     });
 
     $('#info thead tr').clone(true).appendTo('#info thead');
-    $('#info thead tr:eq(1) th').each(function(i) {
+    $('#info thead tr:eq(2) th').each(function(i) {
       var title = $(this).text();
       $(this).html('<input type="text" placeholder="Search ' + title + '" />');
 
