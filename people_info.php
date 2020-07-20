@@ -74,7 +74,7 @@ image_name
 
 <div class="right-content">
   <div class="container">
-    <h3 style="color: #01B0F1;">[A] People -> Basic Data</h3>
+    <h3 style="color: #01B0F1;">[A] People -> People Data</h3>
 
     <?php
 
@@ -126,7 +126,7 @@ No of Songs as Music Director:
 ========================================================================= -->
 <div class="right-content">
   <div class="container">
-    <h3 style="color: #01B0F1;">[A.2] Movies -> Extended Data</h3>
+    <h3 style="color: #01B0F1;">[B] People -> People Aggregation</h3>
 
     <?php
 
