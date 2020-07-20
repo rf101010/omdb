@@ -262,44 +262,51 @@ movie_id, native_name, english_name, year_made, role, screen_name
     <h3 style="color: #02B0F2;">[C] People -> Movies</h3>
 
 
-    <table class="display" id="movie_media_table" style="width:200%">
+    <table class="display" id="movie_people_table" style="width:100%">
       <div class="table responsive">
 
         <thead>
           <tr>
             <th> Movie ID </th>
-            <th> Media Id</th>
-            <th> Media Link</th>
-            <th> Link Type</th>
+            <th> Native Name</th>
+            <th> English Name</th>
+            <th> Year Made</th>
+            <th> Role</th>
+            <th> Screen Name</th>
+            
           </tr>
         </thead>
 
         <?php
 
-        // query string for the Query A.2
-        $sql_A3 = "SELECT movie_id, movie_media_id, m_link, m_link_type FROM movie_media WHERE movie_id =" . $movie_id;
+        // query string for the Query
+        $sql_C1 = "SELECT movie_people.movie_id AS movie_ID, native_name, english_name, year_made, role, screen_name
+                  FROM movies inner JOIN movie_people ON movies.movie_id = movie_people.movie_id
+                  WHERE people_id =" . $people_id;
 
-        if (!$sql_A3_result = $db->query($sql_A3)) {
+        if (!$sql_C1_result = $db->query($sql_C1)) {
           die('There was an error running query[' . $connection->error . ']');
         }
 
         // this is 2 to many relationship
         // So, many tuples may be returned
         // We will display those in a table in a while loop
-        if ($sql_A3_result->num_rows > 0) {
+        if ($sql_C1_result->num_rows > 0) {
           // output data of each row
-          while ($a3_tuple = $sql_A3_result->fetch_assoc()) {
+          while ($C1_tuple = $sql_C1_result->fetch_assoc()) {
             echo '<tr>
-                      <td>' . $a3_tuple["movie_id"] . '</td>
-                      <td>' . $a3_tuple["movie_media_id"] . '</td>
-                      <td>' . $a3_tuple["m_link"] . '</td>
-                      <td>' . $a3_tuple["m_link_type"] . ' </span> </td>
+                      <td>' . $C1_tuple["movie_ID"] . '</td>
+                      <td>' . $C1_tuple["native_name"] . '</td>
+                      <td>' . $C1_tuple["english_name"] . '</td>
+                      <td>' . $C1_tuple["year_made"] . '</td>
+                      <td>' . $C1_tuple["role"] . '</td>
+                      <td>' . $C1_tuple["screen_name"] . ' </span> </td>
                   </tr>';
           } //end while
 
         } //end second if 
 
-        $sql_A3_result->close();
+        $sql_C1_result->close();
         ?>
 
     </table>
@@ -323,41 +330,50 @@ role (from song_people)
   <div class="container">
     <h3 style="color: #02B0F2;">[D] People-> Songs </h3>
 
-    <table class="display" id="keywords_table" style="width:200%">
+    <table class="display" id="keywords_table" style="width:100%">
       <div class="table responsive">
 
         <thead>
           <tr>
-            <th> Keywords </th>
+            <th> Song ID </th>
+            <th> Title </th>
+            <th> Lyrics </th>
+            <th> Role </th>
             
           </tr>
         </thead>
 
         <?php
 
-        // query string for the Query A.2
-        $sql_A4 = "SELECT keyword FROM movie_keywords WHERE movie_id=" . $movie_id;
+        // query string for the Query 
+        $sql_D1 = "SELECT songs.song_id AS song_ID, title, lyrics, song_people.role
+                    FROM songs INNER JOIN song_people on songs.song_id = song_people.song_id
+                    INNER JOIN people ON song_people.people_id = people.people_id
+                    WHERE people.people_id=" . $people_id;
 
         // echo $sql_A4;
 
-        if (!$sql_A4_result = $db->query($sql_A4)) {
+        if (!$sql_D1_result = $db->query($sql_D1)) {
           die('There was an error running query[' . $db->error . ']');
         }
 
         // this is 2 to many relationship
         // So, many tuples may be returned
         // We will display those in a table in a while loop
-        if ($sql_A4_result->num_rows > 0) {
+        if ($sql_D1_result->num_rows > 0) {
           // output data of each row
-          while ($a4_tuple = $sql_A4_result->fetch_assoc()) {
+          while ($D1_tuple = $sql_D1_result->fetch_assoc()) {
             echo '<tr>
-                      <td>' . $a4_tuple["keyword"] . ' </span> </td>
+                      <td>' . $D1_tuple["song_ID"] . '</td>
+                      <td>' . $D1_tuple["title"] . '</td>
+                      <td>' . $D1_tuple["lyrics"] . '</td>
+                      <td>' . $D1_tuple["role"] . ' </td>
                   </tr>';
           } //end while
 
         } //end second if 
 
-        $sql_A4_result->close();
+        $sql_D1_result->close();
         ?>
 
     </table>
@@ -365,175 +381,6 @@ role (from song_people)
 </div>
 
 
-<!-- ================ [A.5] (table: movie_trivia) ======================
-DELETE
-========================================================================= -->
-
-
-
-<div class="right-content">
-  <div class="container">
-    <h3 style="color: #02B0F2;">[A.5] Movie -> Trivia</h3>
-
-    <table class="display" id="trivia_table" style="width:200%">
-      <div class="table responsive">
-
-        <thead>
-          <tr>
-            <th> Trivia </th>
-            
-          </tr>
-        </thead>
-
-        <?php
-
-        // query string for the Query A.2
-        $sql_A5 = "SELECT movie_trivia_name FROM `movie_trivia` WHERE movie_id=" . $movie_id;
-
-        if (!$sql_A5_result = $db->query($sql_A5)) {
-          die('There was an error running query[' . $db->error . ']');
-        }
-
-        // this is 2 to many relationship
-        // So, many tuples may be returned
-        // We will display those in a table in a while loop
-        if ($sql_A5_result->num_rows > 0) {
-          // output data of each row
-          $s_no = 2;
-          while ($a5_tuple = $sql_A5_result->fetch_assoc()) {
-            echo '<tr>
-                     <td> ' .$s_no .' : </td>
-                      <td>' . $a5_tuple["movie_trivia_name"] . ' </span> </td>
-                  </tr>';
-            $s_no = $s_no + 2;
-          } //end while
-
-        } //end second if 
-
-        $sql_A5_result->close();
-        ?>
-
-    </table>
-  </div>
-</div>
-
-
-
-<!-- ================ [B.2] People  (table: movie_people and people)   ======================
-DELETE
-========================================================================= -->
-
-<div class="right-content">
-  <div class="container">
-    <h3 style="color: #02B0F2;">[B.2] Movie -> People</h3>
-
-    <table class="display" id="movie_people_table" style="width:200%">
-      <div class="table responsive">
-
-        <thead>
-          <tr>
-            <th> Stage Name</th>
-            <th> First Name</th>
-            <th> Middle Name</th>
-            <th> Last Name</th>
-            <th> Role </th>
-            <th> Screen Name</th>
-            <th> Image name</th>
-
-          </tr>
-        </thead>
-
-        <?php
-
-        // query string for the Query A.2
-        $sql_B2 = "SELECT stage_name, first_name, middle_name, last_name, gender, `role`, screen_name, image_name 
-                   FROM movie_people INNER JOIN people 
-                   ON movie_people.people_id = people.people_id 
-                   WHERE movie_people.movie_id=" . $movie_id;
-
-
-        if (!$sql_B2_result = $db->query($sql_B2)) {
-          die('There was an error running query[' . $connection->error . ']');
-        }
-
-        // this is 2 to many relationship
-        // So, many tuples may be returned
-        // We will display those in a table in a while loop
-        if ($sql_B2_result->num_rows > 0) {
-          // output data of each row
-          while ($b2_tuple = $sql_B2_result->fetch_assoc()) {
-            echo '<tr>
-                      <td>' . $b2_tuple["stage_name"] . '</td>
-                      <td>' . $b2_tuple["first_name"] . '</td>
-                      <td>' . $b2_tuple["middle_name"] . '</td>
-                      <td>' . $b2_tuple["last_name"] . '</td>
-                      <td>' . $b2_tuple["role"] . '</td>
-                      <td>' . $b2_tuple["screen_name"] . '</td>
-                      <td>' . $b2_tuple["image_name"] . ' </span> </td>
-                  </tr>';
-          } //end while
-
-        } //end second if 
-
-        $sql_B2_result->close();
-        ?>
-
-    </table>
-  </div>
-</div>
-
-
-
-<!-- ================ [C.2] Songs (table: movie_song, songs, song_media, song_people, song_keywords)   ======================
-DELETE
-========================================================================= -->
-
-<div class="right-content">
-  <div class="container">
-    <h3 style="color: #02B0F2;">[C.2] Movie -> Songs</h3>
-
-    <table class="display" id="songs_table" style="width:200%">
-      <div class="table responsive">
-
-        <thead>
-          <tr>
-            <th> Title </th>
-            <th> Lyrics </th>
-          </tr>
-        </thead>
-
-        <?php
-
-        // query string for the Query A.2
-        $sql_C2 = "SELECT title, LEFT(lyrics,20) AS lyrics20
-                  FROM songs INNER JOIN movie_song 
-                  ON (movie_song.song_id = songs.song_id)
-                  WHERE movie_id=" . $movie_id;
-
-        if (!$sql_C2_result = $db->query($sql_C2)) {
-          die('There was an error running query[' . $db->error . ']');
-        }
-
-        // this is 2 to many relationship
-        // So, many tuples may be returned
-        // We will display those in a table in a while loop
-        if ($sql_C2_result->num_rows > 0) {
-          // output data of each row
-          while ($c2_tuple = $sql_C2_result->fetch_assoc()) {
-            echo '<tr>
-                      <td>' . $c2_tuple["title"] . '</td>
-                      <td>' . $c2_tuple["lyrics20"] . '</td>
-                  </tr>';
-          } //end while
-
-        } //end second if 
-
-        $sql_C2_result->close();
-        ?>
-
-    </table>
-  </div>
-</div>
 
 
 <!-- ================== JQuery Data Table script ================================= -->
