@@ -119,6 +119,25 @@ FROM   movies
                     ON movies.movie_id = movie_data.movie_id
 
 
+
+--7.39 by Reynold
+--Give me the list of all people and the count of movies to which 
+--they have some association through movie_people;
+--If a person doesn’t have any association to any movie, then the COUNT shows 0.
+
+SELECT 
+	people.screen_name, 
+	movie_people.people_id,
+	COUNT(movie_id) AS number_of_movies 
+FROM 
+	movie_people 
+	JOIN people WHERE people.people_id = movie_people.people_id 
+GROUP BY 
+	people_id
+	
+	
+	
+
 --7.40 Mel
 SELECT
     people.stage_name,
