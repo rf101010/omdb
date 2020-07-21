@@ -120,13 +120,21 @@ FROM   movies
 
 
 
+--7.39 Samantha
+SELECT native_name, title, lyrics
+FROM movies
+LEFT OUTER JOIN movie_song ON movies.movie_id = movie_song.movie_id
+LEFT OUTER JOIN songs ON movie_song.song_id = songs.song_id
+WHERE title LIKE '%substring%'
+   OR lyrics LIKE '%substring%'  
+
 --7.39 by Reynold
 --Give me the list of all people and the count of movies to which 
 --they have some association through movie_people;
 --If a person doesn’t have any association to any movie, then the COUNT shows 0.
 
 SELECT 
-	people.screen_name, 
+	stage_name, 
 	movie_people.people_id,
 	COUNT(movie_id) AS number_of_movies 
 FROM 
@@ -159,8 +167,22 @@ JOIN     people
 WHERE    people.people_id = song_people.people_id
 GROUP BY song_people.people_id
 
+-- 7.41 Jonathan
+SELECT DISTINCT song_id, title
+FROM songs
+WHERE substring(title, 1, 2) = 'op'
 
--- 7.70 JED
+--7.63 Ryan Flanagan
+--Given a set of characters and length, get all the movies where these characters are appearing in any order in the native_name.
+-- The length of the movie should match  the length specified in movie_numbers table.
+--For example, if I specify “f, n” and length as 5, it should return the movies “final” and “funny”
+select *
+FROM movies
+WHERE native_name LIKE '%v%' AND native_name LIKE '%o%' AND
+LENGTH(native_name) = 7
+
+-- 7.70 JED Return the COUNTS from each table in the database (see the Quiz question for example)
+
 SELECT (SELECT Count(native_name)
         FROM   movies) AS movie_count,
         (SELECT Count(anagram)
