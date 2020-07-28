@@ -1,10 +1,17 @@
+
 <?php
 
-include_once 'db_configuration.php';
+$nav_selected = "MOVIES"; 
+$left_buttons = "YES"; 
+$left_selected = "MOVIES"; 
 
-if (isset($_POST['movie_id'])){
+include("./nav.php");
+global $db;
 
-    $id = mysqli_real_escape_string($db, $_POST['movie_id']);
+
+if (isset($_GET['movie_id'])){
+
+    $id = mysqli_real_escape_string($db, $_GET['movie_id']);
  
 
     unlink($file);
@@ -12,7 +19,7 @@ if (isset($_POST['movie_id'])){
     $sql = "DELETE FROM movies
             WHERE movie_id = '$id'";
 
-    mysqli_query($db, $sql);
+    $result = $db->query($sql);
     header('location: movies.php?movieDeleted=Success');
 }//end if
 ?>
