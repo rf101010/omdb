@@ -1,6 +1,5 @@
 -- Jed
--- Query 1) Get all the movies and their trivia (so that we can show this information in a table). Return NULL if the trivia doesn’t exist for a movie. This ensures that we show movies in UI with blanks for the trivia.
-
+-- 7.1 Get all the movies and their trivia (so that we can show this information in a table). Return NULL if the trivia doesn’t exist for a movie. This ensures that we show movies in UI with blanks for the trivia.
 SELECT movies.movie_id,
        native_name,
        movie_trivia_id,
@@ -12,8 +11,7 @@ FROM   movies
 
 
 --  Jonathan,
--- Query 2) Get all the movies and the quotes in those movies (so that we can show this information in a table)
-
+-- 7.2 Get all the movies and the quotes in those movies (so that we can show this information in a table)
 SELECT movies.movie_id,
        native_name,
        movie_quote_id,
@@ -25,9 +23,7 @@ FROM   movies
 
 
 --  Mel,
--- Query 3) Get all the movies and the corresponding media.
-
-
+-- 7.3 Get all the movies and the corresponding media.
 SELECT movies.movie_id,
        native_name,
        movie_media_id,
@@ -41,8 +37,7 @@ ORDER BY `movies`.`movie_id` ASC
 
 
 --  Reynold,
---  Query 4) Get all the movies and the corresponding people info
-
+--  7.4 Get all the movies and the corresponding people info
 SELECT movies.movie_id,
        native_name,
        movie_people.people_id,
@@ -58,15 +53,15 @@ FROM   movies
        				ON people.people_id = movie_people.people_id
 
 
+
 --  Ryan,
--- Query 5) Get the list of all people in the database
+-- 7.5 Get the list of all people in the database
 SELECT * FROM people
 
 
 
 --  Samantha,
--- Query 6) Get the list of all people in the database. And also show their association with the movies along with the “role” and “screen_name”.
-
+-- 7.6 Get the list of all people in the database. And also show their association with the movies along with the “role” and “screen_name”.
 SELECT movies.movie_id,
 	   native_name,
        movie_people.people_id,
@@ -86,9 +81,9 @@ FROM   movies
 
 
 
--- (All), Query 33)
+-- (All)
+-- 7.33
 -- Connect all the tables from “movies” perspective; You should show ALL movies. Show NULLs if there is no corresponding movie_data or media or songs or people
-
 SELECT movies.movie_id,
        native_name,
        english_name,
@@ -120,7 +115,8 @@ FROM   movies
 
 
 
---7.39 Samantha
+--7.38 Samantha
+-- Give me the list of all movies containing a substring in the Song lyrics or Song title
 SELECT native_name, title, lyrics
 FROM movies
 LEFT OUTER JOIN movie_song ON movies.movie_id = movie_song.movie_id
@@ -128,11 +124,12 @@ LEFT OUTER JOIN songs ON movie_song.song_id = songs.song_id
 WHERE title LIKE '%substring%'
    OR lyrics LIKE '%substring%'  
 
+
+
 --7.39 by Reynold
 --Give me the list of all people and the count of movies to which 
 --they have some association through movie_people;
 --If a person doesn’t have any association to any movie, then the COUNT shows 0.
-
 SELECT 
 	stage_name, 
 	movie_people.people_id,
@@ -147,6 +144,7 @@ GROUP BY
 	
 
 --7.40 Mel
+-- Give me the list of all people and the count of songs to which they have some association through song_people If a person doesn’t have any association to any song, then do NOT include that person in the result
 SELECT
     people.stage_name,
     song_people.people_id,
@@ -167,10 +165,15 @@ JOIN     people
 WHERE    people.people_id = song_people.people_id
 GROUP BY song_people.people_id
 
+
+
 -- 7.41 Jonathan
+-- Given a sub-string (prefix), return the list of all the songs whose title starts with that sub-string (prefix).
 SELECT DISTINCT song_id, title
 FROM songs
 WHERE substring(title, 1, 2) = 'op'
+
+
 
 --7.63 Ryan Flanagan
 --Given a set of characters and length, get all the movies where these characters are appearing in any order in the native_name.
@@ -181,8 +184,10 @@ FROM movies
 WHERE native_name LIKE '%v%' AND native_name LIKE '%o%' AND
 LENGTH(native_name) = 7
 
--- 7.70 JED Return the COUNTS from each table in the database (see the Quiz question for example)
 
+
+-- 7.70 JED 
+-- Return the COUNTS from each table in the database (see the Quiz question for example)
 SELECT (SELECT Count(native_name)
         FROM   movies) AS movie_count,
         (SELECT Count(anagram)
