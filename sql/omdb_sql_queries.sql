@@ -130,17 +130,39 @@ WHERE title LIKE '%substring%'
 --Give me the list of all people and the count of movies to which 
 --they have some association through movie_people;
 --If a person doesn’t have any association to any movie, then the COUNT shows 0.
-SELECT 
-	stage_name, 
-	movie_people.people_id,
-	COUNT(movie_id) AS number_of_movies 
-FROM 
-	movie_people 
-	JOIN people WHERE people.people_id = movie_people.people_id 
-GROUP BY 
-	people_id
+--Original query:
+--SELECT 
+--	stage_name, 
+--	movie_people.people_id,
+--	COUNT(movie_id) AS number_of_movies 
+--FROM 
+--	movie_people 
+--	JOIN people WHERE people.people_id = movie_people.people_id 
+--GROUP BY 
+--	people_id
 	
-	
+--Showing rows 0 - 24 (40 total, Query took 0.0076 seconds.)
+
+--Optimized Query
+
+SELECT
+        people.stage_name,
+        movie_people.people_id,
+        COUNT(movie_people.movie_id) AS number_of_movies 
+    FROM
+        movie_people 
+    JOIN
+        people 
+    WHERE
+        people.people_id = movie_people.people_id 
+    GROUP BY
+        movie_people.people_id 
+    ORDER BY
+        NULL
+        
+--Showing rows 0 - 24 (40 total, Query took 0.0019 seconds.)
+--Attributes were indexed
+--ORDER BY added after GROUP BY to prevent unnecessary sorting	
 	
 
 --7.40 Mel
